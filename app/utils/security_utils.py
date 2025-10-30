@@ -19,7 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 password_hash = PasswordHash.recommended()
 
 
-class UserUtils:
+class SecurityUtils:
     @staticmethod
     def get_password_hash(password: str) -> str:
         return password_hash.hash(password)

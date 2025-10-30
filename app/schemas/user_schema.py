@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 from app.enums.gender_enum import GenderEnum
@@ -17,6 +19,7 @@ class UserLoginSchema(BaseModel):
     password: str
 
 class UserResponseSchema(BaseModel):
+    id:UUID
     username:str
     email:str
     role:RoleEnum
