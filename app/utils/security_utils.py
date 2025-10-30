@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime, timezone
 import jwt
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 from starlette import status
@@ -14,7 +14,8 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+# Simple Bearer token scheme (no OAuth2 flow)
+bearer_scheme = HTTPBearer()
 
 password_hash = PasswordHash.recommended()
 
@@ -61,8 +62,15 @@ class SecurityUtils:
             )
 
     @staticmethod
-    def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_app_db)):
-        payload = UserUtils.decode_access_token(token)
+    def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme), db: Session = Depends(get_app_db)):
+        token = credentials.credentials if credentials else None
+        if not token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        payload = SecurityUtils.decode_access_token(token)
         user_id: str = payload.get("sub")
 
         if not user_id:
@@ -84,7 +92,7 @@ class SecurityUtils:
 
     @staticmethod
     def role_required(required_roles: list[RoleEnum]):
-        def wrapper(current_user: UserModel = Depends(UserUtils.get_current_user)):
+        def wrapper(current_user: UserModel = Depends(SecurityUtils.get_current_user)):
             if current_user.role not in required_roles:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
