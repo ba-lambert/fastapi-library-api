@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Date
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 
 from app.models.base import Base
@@ -13,7 +13,7 @@ class BookModel(Base):
     BOK_DESCRIPTION = Column(String(2000), index=True, nullable=False)
     BOK_AUTHOR = Column(String, index=True, nullable=False)
     BOK_ISBN = Column(String, unique=True, index=True, nullable=False)
-    BOK_PUBLISHED_YEAR = Column(Integer, nullable=True)
+    BOK_PUBLISHED_YEAR = Column(String, nullable=True)
     BOK_COVER_URL = Column(String, nullable=True)
     BOK_PUBLISHER = Column(String, nullable=True)
     BOK_USER_ID = Column(PGUUID(as_uuid=True), ForeignKey('T_USR_USER.id', ondelete='CASCADE'), nullable=False, index=True)
