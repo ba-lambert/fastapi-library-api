@@ -28,7 +28,7 @@ def save_book_to_db(db: Session, books_data):
                 BOK_PUBLISHED_YEAR=book.get('published_date') or 'Unknown',
                 BOK_COVER_URL=book.get('cover_url') or '',
                 BOK_PUBLISHER=book.get('publisher') or 'Unknown Publisher',
-                BOK_USER_ID="df44c01b-e7c4-4531-bd59-19408521554d",
+                BOK_USER_ID="d62cb205-46f0-4c70-949c-85921c5c8fc2",
             )
             db.add(db_book)
     db.commit()

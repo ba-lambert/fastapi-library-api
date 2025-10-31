@@ -8,6 +8,8 @@ from alembic import context
 from app.models.base import Base
 from app.models.book_model import BookModel
 from app.models.user_models import UserModel
+from app.models.stock_model import StockModel
+from app.models.borrowed_book_model import BorrowBookModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
