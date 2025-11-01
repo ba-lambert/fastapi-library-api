@@ -29,3 +29,10 @@ class StockService:
         db.commit()
         db.refresh(new_stock)
         return new_stock
+
+    @staticmethod
+    def get_stock_by_book_id(db: Session, book_id: str):
+        stock = db.query(StockModel).filter(StockModel.STK_BOOK_ID == book_id).first()
+        if not stock:
+            raise HTTPException(status_code=404, detail="Stock not found for the given book ID")
+        return stock

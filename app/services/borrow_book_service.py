@@ -11,12 +11,10 @@ from app.schemas.borrow_book_schema import BorrowBookSchema
 class BorrowBookService:
     @staticmethod
     def borrow_book(db: Session, data: BorrowBookSchema, current_user):
-        # Check if the book exists
         existing_book = db.query(BookModel).filter(BookModel.BOK_ID == data.book_id).first()
         if not existing_book:
             raise HTTPException(status_code=404, detail="Book not found")
 
-        # Check stock availability
         stock = db.query(StockModel).filter(
             and_(
                 StockModel.STK_BOOK_ID == data.book_id,
@@ -29,7 +27,7 @@ class BorrowBookService:
 
         borrow_book = BorrowBookModel(
             BOR_BOOK_ID=data.book_id,
-            BOR_USER_ID=current_user.USER_ID,
+            BOR_USER_ID=current_user.id,
             BOR_QUANTITY=data.quantity
         )
         db.add(borrow_book)
